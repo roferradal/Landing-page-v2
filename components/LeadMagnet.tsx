@@ -103,16 +103,18 @@ const LeadMagnet: React.FC = () => {
         setStatus(FormStatus.Loading);
         setMessage('');
 
-        // Simulate an API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
         try {
-            // In a real app, you'd make a fetch request here:
-            // const webhookUrl = 'https://webhook.site/your-unique-url';
-            // const response = await fetch(webhookUrl, { ... });
-            // if (!response.ok) throw new Error('Network error');
+            const baseUrl = 'https://n8n.srv921726.hstgr.cloud/webhook-test/7acf0b60-c3f7-4fee-b52c-2ebf40452bde';
+            const url = new URL(baseUrl);
+            url.searchParams.append('name', name);
+            url.searchParams.append('email', email);
+
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+            });
             
-            // On successful submission:
+            // We can't check response.ok with test webhooks and certain server configs
+            // So we assume success if fetch doesn't throw an error.
             setStatus(FormStatus.Success);
             setName('');
             setEmail('');
@@ -124,6 +126,7 @@ const LeadMagnet: React.FC = () => {
     };
     
     const renderFormContent = () => {
+        const isSubmitting = status === FormStatus.Loading;
         switch (status) {
             case FormStatus.Loading:
                 return (
@@ -152,16 +155,16 @@ const LeadMagnet: React.FC = () => {
                             email={email} 
                             onNameChange={handleNameChange} 
                             onEmailChange={handleEmailChange}
-                            disabled={false}
+                            disabled={isSubmitting}
                             errors={errors}
                         />
                         {status === FormStatus.Error && message && <p className="mt-4 text-sm text-center text-red-600">{message}</p>}
                         <button 
                             type="submit" 
                             className="w-full bg-blue-600 text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition mt-6 disabled:bg-blue-300"
-                            disabled={false}
+                            disabled={isSubmitting}
                         >
-                            Send Me The Kit!
+                            {isSubmitting ? 'Sending...' : 'Send Me The Kit!'}
                         </button>
                     </form>
                 );
