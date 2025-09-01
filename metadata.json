@@ -1,0 +1,5 @@
+{
+  "name": "Uptaskme AI Strategy Landing Page 2",
+  "description": "A responsive landing page for Uptaskme, a service offering practical AI strategies for entrepreneurs. The page is built with React and Tailwind CSS, featuring sections for hero, testimonials, problem/solution, and a lead magnet form.",
+  "requestFramePermissions": []
+}
